@@ -1,6 +1,6 @@
 # meta-stripper
 
-Privacy-focused metadata removal tool for documents. Strip identifying information from PDFs, DOCX files, and more with a simple command.
+Privacy-focused metadata removal tool for documents and images. Strip identifying information from PDFs, DOCX files, JPEGs, PNGs, and more with a simple command.
 
 [![Tests](https://github.com/KnowOneActual/meta-stripper/workflows/Tests/badge.svg)](https://github.com/KnowOneActual/meta-stripper/actions)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -20,6 +20,8 @@ Privacy-focused metadata removal tool for documents. Strip identifying informati
 
 - **PDF metadata removal** - Clean author, creator, producer, and custom fields
 - **DOCX metadata stripping** - Remove document properties and custom XML
+- **JPEG EXIF removal** - Strip GPS, camera, and other EXIF data from photos
+- **PNG metadata removal** - Clean text chunks and embedded metadata
 - **Batch processing** - Handle multiple files at once
 - **Cross-platform** - Works on Linux (Fedora) and macOS
 - **Lightweight** - Minimal dependencies, fast execution
@@ -35,6 +37,9 @@ Privacy-focused metadata removal tool for documents. Strip identifying informati
 # Clone the repository
 git clone https://github.com/KnowOneActual/meta-stripper.git
 cd meta-stripper
+
+# Checkout the image support branch
+git checkout feature/image-support
 
 # Install in development mode
 pip install -e .
@@ -64,14 +69,18 @@ See our [ROADMAP](ROADMAP.md) for the timeline toward v1.0.0 and public package 
 ## Quick Start
 
 ```bash
-# Strip metadata from a single file
+# Strip metadata from documents
 metastripper document.pdf
+metastripper contract.docx
+
+# Strip EXIF data from photos
+metastripper photo.jpg vacation.png
 
 # Process multiple files
-metastripper report.pdf contract.docx
+metastripper report.pdf photo.jpg contract.docx
 
 # View metadata without stripping
-metastripper --show document.pdf
+metastripper --show photo.jpg
 ```
 
 > 💡 **New to metadata removal?** Check out [Why Metadata Matters](WHY_METADATA_MATTERS.md) to understand the risks and [Quick Reference](QUICK_REFERENCE.md) for common usage patterns.
@@ -84,21 +93,26 @@ metastripper --show document.pdf
 # Strip metadata - creates document_no_metadata.pdf
 metastripper document.pdf
 
+# Strip EXIF from photo - creates photo_no_metadata.jpg
+metastripper photo.jpg
+
 # Specify output filename
 metastripper input.docx -o clean_output.docx
 
 # View metadata before stripping
 metastripper --show document.pdf
+metastripper --show photo.jpg
 ```
 
 ### Multiple Files
 
 ```bash
-# Process multiple files
-metastripper file1.pdf file2.docx file3.pdf
+# Process multiple files of different types
+metastripper file1.pdf file2.docx photo.jpg
 
 # Use wildcards (bash)
 metastripper *.pdf
+metastripper *.jpg *.png
 ```
 
 ### Options
@@ -122,8 +136,10 @@ optional arguments:
 
 - ✅ PDF (.pdf)
 - ✅ Microsoft Word (.docx)
-- 🚧 Images (JPEG, PNG) - Coming soon
-- 🚧 LibreOffice (.odt, .ods) - Planned
+- ✅ JPEG/JPG images (.jpg, .jpeg)
+- ✅ PNG images (.png)
+- 🚧 WebP images - Planned for v0.2.1
+- 🚧 LibreOffice (.odt, .ods) - Planned for v0.3.0
 
 ## How It Works
 
@@ -143,6 +159,25 @@ Uses direct ZIP manipulation to:
 - Remove `docProps/custom.xml` (custom properties)
 - Preserve document content and formatting
 
+### JPEG/JPG Files
+Removes EXIF metadata including:
+- Camera make and model
+- GPS location coordinates
+- Date and time taken
+- Software used
+- Copyright information
+- Thumbnail images
+- Preserves image quality (95% JPEG quality)
+
+### PNG Files
+Removes metadata chunks including:
+- Text chunks (tEXt, iTXt, zTXt)
+- Creation time
+- Author information
+- Software information
+- Embedded EXIF data (if present)
+- Preserves transparency
+
 ## Development
 
 ### Setup
@@ -151,6 +186,9 @@ Uses direct ZIP manipulation to:
 # Clone the repository
 git clone https://github.com/KnowOneActual/meta-stripper.git
 cd meta-stripper
+
+# Checkout feature branch
+git checkout feature/image-support
 
 # Install in development mode with dev dependencies
 pip install -e ".[dev]"
@@ -176,7 +214,9 @@ meta-stripper/
 │           ├── __init__.py
 │           ├── base.py          # Abstract handler
 │           ├── pdf.py           # PDF handler
-│           └── docx.py          # DOCX handler
+│           ├── docx.py          # DOCX handler
+│           ├── jpeg.py          # JPEG handler
+│           └── png.py           # PNG handler
 ├── tests/                       # Test suite
 ├── pyproject.toml              # Project configuration
 └── README.md
@@ -188,13 +228,14 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 ## Privacy & Security Notes
 
-This tool removes **standard metadata fields** from documents. Please note:
+This tool removes **standard metadata fields** from documents and images. Please note:
 
-- ✅ Removes author, title, creation dates, and similar metadata
+- ✅ Removes author, title, creation dates, EXIF, GPS, and similar metadata
 - ✅ Safe for common privacy use cases
 - ❌ Does NOT remove steganographic data
 - ❌ Does NOT strip watermarks or visual identifiers
 - ❌ Does NOT guarantee complete anonymization
+- ⚠️ JPEG processing may slightly reduce image quality (uses 95% quality setting)
 
 For maximum privacy, combine with other sanitization tools and manual review.
 
@@ -202,7 +243,8 @@ For maximum privacy, combine with other sanitization tools and manual review.
 
 ## Roadmap
 
-- [ ] Image format support (JPEG, PNG, WebP)
+- [x] Image format support (JPEG, PNG) - **v0.2.0**
+- [ ] WebP image support
 - [ ] Batch directory processing with `--recursive`
 - [ ] In-place editing with `--in-place`
 - [ ] Selective metadata preservation
@@ -230,6 +272,7 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 - Inspired by [MAT2](https://0xacab.org/jvoisin/mat2) and other metadata removal tools
 - Built with [PyPDF2](https://github.com/py-pdf/pypdf) for PDF handling
+- Built with [Pillow](https://python-pillow.org/) for image handling
 
 ## Support
 
