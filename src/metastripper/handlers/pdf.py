@@ -26,8 +26,15 @@ class PDFHandler(BaseHandler):
                 metadata = pdf_reader.metadata
 
                 if metadata:
-                    # Clean up metadata keys (remove leading '/')
-                    return {key.lstrip("/"): value for key, value in metadata.items()}
+                    # Clean up metadata keys and filter auto-generated values
+                    cleaned = {}
+                    for key, value in metadata.items():
+                        clean_key = key.lstrip("/")
+                        # Skip empty values and auto-generated Producer
+                        if value and value.strip() and not (clean_key == "Producer" and value == "PyPDF2"):
+                            cleaned[clean_key] = value
+                    
+                    return cleaned if cleaned else None
                 return None
 
         except PyPDF2.errors.PdfReadError:
