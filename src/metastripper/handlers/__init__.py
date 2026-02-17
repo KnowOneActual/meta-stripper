@@ -5,11 +5,16 @@ from typing import Type
 from .base import BaseHandler
 from .pdf import PDFHandler
 from .docx import DOCXHandler
+from .jpeg import JPEGHandler
+from .png import PNGHandler
 
 
 HANDLER_MAP = {
     '.pdf': PDFHandler,
     '.docx': DOCXHandler,
+    '.jpg': JPEGHandler,
+    '.jpeg': JPEGHandler,
+    '.png': PNGHandler,
 }
 
 
@@ -28,7 +33,7 @@ def get_handler(filepath: Path) -> Type[BaseHandler]:
     suffix = filepath.suffix.lower()
     
     if suffix not in HANDLER_MAP:
-        supported = ', '.join(HANDLER_MAP.keys())
+        supported = ', '.join(sorted(set(HANDLER_MAP.keys())))
         raise ValueError(
             f"Unsupported file type: {suffix}. "
             f"Supported types: {supported}"
@@ -37,4 +42,11 @@ def get_handler(filepath: Path) -> Type[BaseHandler]:
     return HANDLER_MAP[suffix]()
 
 
-__all__ = ['BaseHandler', 'PDFHandler', 'DOCXHandler', 'get_handler']
+__all__ = [
+    'BaseHandler',
+    'PDFHandler',
+    'DOCXHandler',
+    'JPEGHandler',
+    'PNGHandler',
+    'get_handler'
+]
