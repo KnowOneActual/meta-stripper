@@ -19,7 +19,7 @@ Privacy-focused metadata removal tool for documents. Strip identifying informati
 
 ## Installation
 
-> **📦 Distribution Status**: This package is **not yet available on PyPI or Homebrew**. We're holding off on public package distribution until the tool has been thoroughly tested. For now, please install from source.
+> **📦 Distribution Status**: This package is **not yet available on PyPI or Homebrew**. Holding off on public package distribution until the tool has been thoroughly tested. For now, please install from source.
 
 ### From Source (Current Method)
 
