@@ -74,7 +74,7 @@ Tracked changes and comments reveal internal debates, controversial decisions, a
 
 **Real-World Impact:** A government agency released a policy document with tracked changes disabled in the visible interface. However, journalists discovered the full edit history in the document's XML structure, revealing heated internal disagreements and politically sensitive language that embarrassed the administration.
 
-## Production Workflow Vulnerabilities
+## Workflow Vulnerabilities
 
 ### Document Types at Risk
 
