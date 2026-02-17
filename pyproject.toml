@@ -4,15 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "meta-stripper"
-version = "0.1.0"
-description = "Privacy-focused metadata removal tool for documents"
+version = "0.2.0"
+description = "Privacy-focused metadata removal tool for documents and images"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
     {name = "KnowOneActual"}
 ]
-keywords = ["metadata", "privacy", "pdf", "docx", "exif", "security"]
+keywords = ["metadata", "privacy", "pdf", "docx", "exif", "jpeg", "png", "security"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -30,6 +30,7 @@ classifiers = [
 
 dependencies = [
     "PyPDF2>=3.0.0",
+    "Pillow>=10.0.0",
 ]
 
 [project.optional-dependencies]
