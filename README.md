@@ -17,39 +17,53 @@ Privacy-focused metadata removal tool for documents. Strip identifying informati
 - **Lightweight** - Minimal dependencies, fast execution
 - **Safe defaults** - Creates new files, never modifies originals
 
+## Installation
+
+> **📦 Distribution Status**: This package is **not yet available on PyPI or Homebrew**. We're holding off on public package distribution until the tool has been thoroughly tested. For now, please install from source.
+
+### From Source (Current Method)
+
+```bash
+# Clone the repository
+git clone https://github.com/KnowOneActual/meta-stripper.git
+cd meta-stripper
+
+# Install in development mode
+pip install -e .
+
+# Or install with dev dependencies
+pip install -e ".[dev]"
+```
+
+### Future Installation Methods (v1.0.0+)
+
+Once thoroughly tested, the following installation methods will be available:
+
+```bash
+# PyPI (coming soon)
+pip install meta-stripper
+pipx install meta-stripper
+
+# Homebrew for macOS (planned)
+brew install meta-stripper
+
+# RPM for Fedora/RHEL (planned)
+dnf install meta-stripper
+```
+
+See our [ROADMAP](ROADMAP.md) for the timeline toward v1.0.0 and public package distribution.
+
 ## Quick Start
 
 ```bash
-# Install via pip
-pip install meta-stripper
-
 # Strip metadata from a single file
 metastripper document.pdf
 
 # Process multiple files
-metastripper report.pdf contract.docx presentation.pptx
+metastripper report.pdf contract.docx
 
 # View metadata without stripping
 metastripper --show document.pdf
-```
-
-## Installation
-
-### Using pipx (recommended for CLI tools)
-```bash
-pipx install meta-stripper
-```
-
-### Using pip
-```bash
-pip install meta-stripper
-```
-
-### From source
-```bash
-git clone https://github.com/KnowOneActual/meta-stripper.git
-cd meta-stripper
-pip install -e .
 ```
 
 ## Usage
@@ -187,6 +201,15 @@ For maximum privacy, combine with other sanitization tools and manual review.
 
 See [ROADMAP.md](ROADMAP.md) for detailed version planning.
 
+## Testing & Feedback
+
+We're currently in the testing phase before public distribution. If you:
+- Find bugs → [Open an issue](https://github.com/KnowOneActual/meta-stripper/issues)
+- Have feature ideas → [Start a discussion](https://github.com/KnowOneActual/meta-stripper/discussions)
+- Want to contribute → See [CONTRIBUTING.md](CONTRIBUTING.md)
+
+Your feedback helps make this tool better for everyone!
+
 ## License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
@@ -200,5 +223,5 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 If you encounter issues or have questions:
 - Open an issue: [GitHub Issues](https://github.com/KnowOneActual/meta-stripper/issues)
-- Check the [documentation](https://github.com/KnowOneActual/meta-stripper)
+- Start a discussion: [GitHub Discussions](https://github.com/KnowOneActual/meta-stripper/discussions)
 - See the [ROADMAP](ROADMAP.md) for planned features
