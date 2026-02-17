@@ -39,7 +39,7 @@ class WebPHandler(BaseHandler):
                             if isinstance(value, bytes):
                                 try:
                                     value = value.decode("utf-8", errors="replace")
-                                except:
+                                except Exception:
                                     value = f"<binary data: {len(value)} bytes>"
 
                             metadata[f"EXIF_{tag_name}"] = value
@@ -57,7 +57,7 @@ class WebPHandler(BaseHandler):
                         if isinstance(value, bytes):
                             try:
                                 value = value.decode("utf-8", errors="replace")
-                            except:
+                            except Exception:
                                 value = f"<binary data: {len(value)} bytes>"
 
                         metadata[key] = value
@@ -65,7 +65,7 @@ class WebPHandler(BaseHandler):
                 return metadata if metadata else None
 
         except Exception as e:
-            raise Exception(f"Failed to read WebP metadata: {e}")
+            raise Exception(f"Failed to read WebP metadata: {e}") from e
 
     def strip_metadata(self, input_path: Path, output_path: Path) -> None:
         """Strip metadata from a WebP file.
@@ -102,4 +102,4 @@ class WebPHandler(BaseHandler):
                 clean_img.save(output_path, **save_kwargs)
 
         except Exception as e:
-            raise Exception(f"Failed to strip WebP metadata: {e}")
+            raise Exception(f"Failed to strip WebP metadata: {e}") from e

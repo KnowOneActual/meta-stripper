@@ -85,7 +85,7 @@ class XLSXHandler(BaseHandler):
             return metadata if metadata else None
 
         except Exception as e:
-            raise Exception(f"Failed to read XLSX metadata: {e}")
+            raise Exception(f"Failed to read XLSX metadata: {e}") from e
 
     def strip_metadata(self, input_path: Path, output_path: Path) -> None:
         """Strip metadata from an XLSX file.
@@ -98,20 +98,21 @@ class XLSXHandler(BaseHandler):
             Exception: If stripping fails
         """
         try:
-            with zipfile.ZipFile(input_path, "r") as zin:
-                with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED) as zout:
-                    for item in zin.infolist():
-                        # Skip metadata files
-                        if item.filename in [
-                            "docProps/app.xml",
-                            "docProps/core.xml",
-                            "docProps/custom.xml",
-                        ]:
-                            continue
+            with zipfile.ZipFile(input_path, "r") as zin, zipfile.ZipFile(
+                output_path, "w", zipfile.ZIP_DEFLATED
+            ) as zout:
+                for item in zin.infolist():
+                    # Skip metadata files
+                    if item.filename in [
+                        "docProps/app.xml",
+                        "docProps/core.xml",
+                        "docProps/custom.xml",
+                    ]:
+                        continue
 
-                        # Copy all other files
-                        data = zin.read(item.filename)
-                        zout.writestr(item, data)
+                    # Copy all other files
+                    data = zin.read(item.filename)
+                    zout.writestr(item, data)
 
         except Exception as e:
-            raise Exception(f"Failed to strip XLSX metadata: {e}")
+            raise Exception(f"Failed to strip XLSX metadata: {e}") from e

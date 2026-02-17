@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from PIL import Image, PngImagePlugin
+from PIL import Image
 
 from .base import BaseHandler
 
@@ -38,7 +38,7 @@ class PNGHandler(BaseHandler):
                         if isinstance(value, bytes):
                             try:
                                 value = value.decode("utf-8", errors="replace")
-                            except:
+                            except Exception:
                                 value = f"<binary data: {len(value)} bytes>"
 
                         metadata[key] = value
@@ -53,14 +53,14 @@ class PNGHandler(BaseHandler):
                         if isinstance(value, bytes):
                             try:
                                 value = value.decode("utf-8", errors="replace")
-                            except:
+                            except Exception:
                                 value = f"<binary data: {len(value)} bytes>"
                         metadata[tag_name] = value
 
                 return metadata if metadata else None
 
         except Exception as e:
-            raise Exception(f"Failed to read PNG metadata: {e}")
+            raise Exception(f"Failed to read PNG metadata: {e}") from e
 
     def strip_metadata(self, input_path: Path, output_path: Path) -> None:
         """Strip metadata from a PNG file.
@@ -96,4 +96,4 @@ class PNGHandler(BaseHandler):
                 clean_img.save(output_path, **save_kwargs)
 
         except Exception as e:
-            raise Exception(f"Failed to strip PNG metadata: {e}")
+            raise Exception(f"Failed to strip PNG metadata: {e}") from e

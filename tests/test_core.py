@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from metastripper.core import display_metadata, strip_metadata
+from metastripper.core import strip_metadata
 
 
 def test_strip_metadata_file_not_found():

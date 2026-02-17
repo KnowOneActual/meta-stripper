@@ -84,16 +84,15 @@ def process_file(
             metadata = display_metadata(filepath)
             print_metadata(filepath, metadata)
             return True
-        else:
-            # Strip metadata mode
-            if verbose:
-                print(f"Processing: {filepath}")
+        # Strip metadata mode
+        if verbose:
+            print(f"Processing: {filepath}")
 
-            result_path = strip_metadata(filepath, output_path)
+        result_path = strip_metadata(filepath, output_path)
 
-            print(f"✓ Successfully stripped metadata from {filepath.name}")
-            print(f"  Output saved to: {result_path}")
-            return True
+        print(f"✓ Successfully stripped metadata from {filepath.name}")
+        print(f"  Output saved to: {result_path}")
+        return True
 
     except ValueError as e:
         print(f"✗ Error: {e}", file=sys.stderr)

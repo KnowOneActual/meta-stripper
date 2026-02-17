@@ -61,7 +61,7 @@ class DOCXHandler(BaseHandler):
             return metadata if metadata else None
 
         except Exception as e:
-            raise Exception(f"Error reading DOCX metadata: {e}")
+            raise Exception(f"Error reading DOCX metadata: {e}") from e
 
     def strip_metadata(self, input_path: Path, output_path: Path) -> None:
         """Strip metadata from a DOCX file.
@@ -73,31 +73,32 @@ class DOCXHandler(BaseHandler):
             output_path: Path for output DOCX
         """
         try:
-            with ZipFile(input_path, "r") as zip_read:
-                with ZipFile(output_path, "w", ZIP_DEFLATED) as zip_write:
-                    for item in zip_read.infolist():
-                        filename = item.filename
+            with ZipFile(input_path, "r") as zip_read, ZipFile(
+                output_path, "w", ZIP_DEFLATED
+            ) as zip_write:
+                for item in zip_read.infolist():
+                    filename = item.filename
 
-                        # Remove app.xml (extended properties) completely
-                        if filename == "docProps/app.xml":
-                            continue
+                    # Remove app.xml (extended properties) completely
+                    if filename == "docProps/app.xml":
+                        continue
 
-                        # Replace core.xml with clean version
-                        elif filename == "docProps/core.xml":
-                            clean_core = self._create_clean_core_xml()
-                            zip_write.writestr(item, clean_core)
-                            continue
+                    # Replace core.xml with clean version
+                    if filename == "docProps/core.xml":
+                        clean_core = self._create_clean_core_xml()
+                        zip_write.writestr(item, clean_core)
+                        continue
 
-                        # Remove custom.xml if present
-                        elif filename == "docProps/custom.xml":
-                            continue
+                    # Remove custom.xml if present
+                    if filename == "docProps/custom.xml":
+                        continue
 
-                        # Copy everything else as-is
-                        data = zip_read.read(filename)
-                        zip_write.writestr(item, data)
+                    # Copy everything else as-is
+                    data = zip_read.read(filename)
+                    zip_write.writestr(item, data)
 
         except Exception as e:
-            raise Exception(f"Error stripping DOCX metadata: {e}")
+            raise Exception(f"Error stripping DOCX metadata: {e}") from e
 
     def _create_clean_core_xml(self) -> bytes:
         """Create minimal core.xml with no identifying metadata.

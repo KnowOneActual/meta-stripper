@@ -86,7 +86,7 @@ class PPTXHandler(BaseHandler):
             return metadata if metadata else None
 
         except Exception as e:
-            raise Exception(f"Failed to read PPTX metadata: {e}")
+            raise Exception(f"Failed to read PPTX metadata: {e}") from e
 
     def strip_metadata(self, input_path: Path, output_path: Path) -> None:
         """Strip metadata from a PPTX file.
@@ -99,20 +99,21 @@ class PPTXHandler(BaseHandler):
             Exception: If stripping fails
         """
         try:
-            with zipfile.ZipFile(input_path, "r") as zin:
-                with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED) as zout:
-                    for item in zin.infolist():
-                        # Skip metadata files
-                        if item.filename in [
-                            "docProps/app.xml",
-                            "docProps/core.xml",
-                            "docProps/custom.xml",
-                        ]:
-                            continue
+            with zipfile.ZipFile(input_path, "r") as zin, zipfile.ZipFile(
+                output_path, "w", zipfile.ZIP_DEFLATED
+            ) as zout:
+                for item in zin.infolist():
+                    # Skip metadata files
+                    if item.filename in [
+                        "docProps/app.xml",
+                        "docProps/core.xml",
+                        "docProps/custom.xml",
+                    ]:
+                        continue
 
-                        # Copy all other files (slides, layouts, themes, media, etc.)
-                        data = zin.read(item.filename)
-                        zout.writestr(item, data)
+                    # Copy all other files (slides, layouts, themes, media, etc.)
+                    data = zin.read(item.filename)
+                    zout.writestr(item, data)
 
         except Exception as e:
-            raise Exception(f"Failed to strip PPTX metadata: {e}")
+            raise Exception(f"Failed to strip PPTX metadata: {e}") from e

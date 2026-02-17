@@ -40,7 +40,7 @@ class JPEGHandler(BaseHandler):
                     if isinstance(value, bytes):
                         try:
                             value = value.decode("utf-8", errors="replace")
-                        except:
+                        except Exception:
                             value = f"<binary data: {len(value)} bytes>"
 
                     metadata[tag_name] = value
@@ -51,7 +51,7 @@ class JPEGHandler(BaseHandler):
             # Image has no EXIF data
             return None
         except Exception as e:
-            raise Exception(f"Failed to read EXIF metadata: {e}")
+            raise Exception(f"Failed to read EXIF metadata: {e}") from e
 
     def strip_metadata(self, input_path: Path, output_path: Path) -> None:
         """Strip EXIF metadata from a JPEG file.
@@ -94,4 +94,4 @@ class JPEGHandler(BaseHandler):
                 )
 
         except Exception as e:
-            raise Exception(f"Failed to strip JPEG metadata: {e}")
+            raise Exception(f"Failed to strip JPEG metadata: {e}") from e

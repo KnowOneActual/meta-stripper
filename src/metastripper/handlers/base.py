@@ -18,7 +18,6 @@ class BaseHandler(ABC):
         Returns:
             Dictionary of metadata or None if no metadata found
         """
-        pass
 
     @abstractmethod
     def strip_metadata(self, input_path: Path, output_path: Path) -> None:
@@ -31,4 +30,3 @@ class BaseHandler(ABC):
         Raises:
             Exception: If stripping fails
         """
-        pass
