@@ -6,6 +6,8 @@ from metastripper.handlers import (
     get_handler,
     PDFHandler,
     DOCXHandler,
+    XLSXHandler,
+    PPTXHandler,
     JPEGHandler,
     PNGHandler,
     WebPHandler,
@@ -22,6 +24,18 @@ def test_get_handler_docx():
     """Test that DOCX handler is returned for .docx files."""
     handler = get_handler(Path("test.docx"))
     assert isinstance(handler, DOCXHandler)
+
+
+def test_get_handler_xlsx():
+    """Test that XLSX handler is returned for .xlsx files."""
+    handler = get_handler(Path("test.xlsx"))
+    assert isinstance(handler, XLSXHandler)
+
+
+def test_get_handler_pptx():
+    """Test that PPTX handler is returned for .pptx files."""
+    handler = get_handler(Path("test.pptx"))
+    assert isinstance(handler, PPTXHandler)
 
 
 def test_get_handler_jpeg():
@@ -50,7 +64,17 @@ def test_get_handler_webp():
 
 def test_get_handler_case_insensitive():
     """Test that handler detection is case-insensitive."""
-    # Test uppercase extensions
+    # Test uppercase extensions for documents
+    handler_docx = get_handler(Path("test.DOCX"))
+    assert isinstance(handler_docx, DOCXHandler)
+    
+    handler_xlsx = get_handler(Path("test.XLSX"))
+    assert isinstance(handler_xlsx, XLSXHandler)
+    
+    handler_pptx = get_handler(Path("test.PPTX"))
+    assert isinstance(handler_pptx, PPTXHandler)
+    
+    # Test uppercase extensions for images
     handler_jpg = get_handler(Path("test.JPG"))
     assert isinstance(handler_jpg, JPEGHandler)
     
@@ -71,3 +95,9 @@ def test_get_handler_unsupported():
     
     with pytest.raises(ValueError, match="Unsupported file type"):
         get_handler(Path("test.bmp"))
+    
+    with pytest.raises(ValueError, match="Unsupported file type"):
+        get_handler(Path("test.doc"))  # Old Office format
+    
+    with pytest.raises(ValueError, match="Unsupported file type"):
+        get_handler(Path("test.xls"))  # Old Excel format
