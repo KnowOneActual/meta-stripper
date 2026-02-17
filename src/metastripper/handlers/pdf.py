@@ -31,8 +31,10 @@ class PDFHandler(BaseHandler):
                     for key, value in metadata.items():
                         clean_key = key.lstrip("/")
                         # Skip empty values and auto-generated Producer
-                        if value and value.strip() and not (
-                            clean_key == "Producer" and value == "PyPDF2"
+                        if (
+                            value
+                            and value.strip()
+                            and not (clean_key == "Producer" and value == "PyPDF2")
                         ):
                             cleaned[clean_key] = value
 
