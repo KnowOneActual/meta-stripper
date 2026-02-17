@@ -83,7 +83,6 @@ class DOCXHandler(BaseHandler):
                     if filename == "docProps/app.xml":
                         continue
 
-<<<<<<< Updated upstream
                     # Replace core.xml with clean version
                     if filename == "docProps/core.xml":
                         clean_core = self._create_clean_core_xml()
@@ -93,17 +92,6 @@ class DOCXHandler(BaseHandler):
                     # Remove custom.xml if present
                     if filename == "docProps/custom.xml":
                         continue
-=======
-                        # Replace core.xml with clean version
-                        if filename == "docProps/core.xml":
-                            clean_core = self._create_clean_core_xml()
-                            zip_write.writestr(item, clean_core)
-                            continue
-
-                        # Remove custom.xml if present
-                        if filename == "docProps/custom.xml":
-                            continue
->>>>>>> Stashed changes
 
                     # Copy everything else as-is
                     data = zip_read.read(filename)
