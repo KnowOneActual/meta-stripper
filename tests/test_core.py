@@ -1,8 +1,10 @@
 """Tests for core functionality."""
 
-import pytest
 from pathlib import Path
-from metastripper.core import strip_metadata, display_metadata
+
+import pytest
+
+from metastripper.core import display_metadata, strip_metadata
 
 
 def test_strip_metadata_file_not_found():
@@ -15,6 +17,6 @@ def test_strip_metadata_unsupported_format(tmp_path):
     """Test that ValueError is raised for unsupported file types."""
     test_file = tmp_path / "test.txt"
     test_file.write_text("test content")
-    
+
     with pytest.raises(ValueError, match="Unsupported file type"):
         strip_metadata(test_file)
