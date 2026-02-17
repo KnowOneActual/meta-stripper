@@ -75,8 +75,8 @@ class PNGHandler(BaseHandler):
         try:
             with Image.open(input_path) as img:
                 # Create new image without metadata
-                # Load image data
-                data = list(img.getdata())
+                # Load image data using non-deprecated method
+                data = list(img.get_flattened_data())
 
                 # Create clean image with same mode and size
                 clean_img = Image.new(img.mode, img.size)
