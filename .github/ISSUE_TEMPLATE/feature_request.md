@@ -1,20 +1,48 @@
 ---
-name: "💡 Feature Request"
-about: Suggest an idea or enhancement for this project
-title: "[FEAT] "
+name: Feature Request
+about: Suggest a new feature or improvement
+title: '[FEATURE] '
 labels: enhancement
 assignees: ''
-
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. "I'm always frustrated when [...]"
+## Feature Description
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+A clear and concise description of the feature you'd like to see.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+## Use Case
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+Describe the problem this feature would solve or the workflow it would improve.
+
+**Example**: "As a privacy-conscious user, I want to strip metadata from JPEG images so that..."
+
+## Proposed Solution
+
+Describe how you envision this feature working.
+
+## Alternatives Considered
+
+Describe any alternative solutions or features you've considered.
+
+## Additional Context
+
+- Would this require new dependencies?
+- Are there similar features in other tools (MAT2, ExifTool, etc.)?
+- Would this work across all platforms (Linux, macOS)?
+
+## Examples
+
+If applicable, provide usage examples:
+
+```bash
+metastripper --new-feature file.ext
+```
+
+## Priority
+
+How important is this feature to you?
+
+- [ ] Critical - Blocking my use of the tool
+- [ ] High - Would significantly improve my workflow
+- [ ] Medium - Nice to have
+- [ ] Low - Minor improvement
