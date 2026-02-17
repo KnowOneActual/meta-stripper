@@ -1,6 +1,6 @@
 # meta-stripper
 
-Privacy-focused metadata removal tool for documents and images. Strip identifying information from PDFs, DOCX files, JPEGs, PNGs, WebP, and more with a simple command.
+Privacy-focused metadata removal tool for documents and images. Strip identifying information from PDFs, Office documents (Word, Excel, PowerPoint), images (JPEG, PNG, WebP), and more with a simple command.
 
 [![Tests](https://github.com/KnowOneActual/meta-stripper/workflows/Tests/badge.svg)](https://github.com/KnowOneActual/meta-stripper/actions)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -19,7 +19,7 @@ Privacy-focused metadata removal tool for documents and images. Strip identifyin
 ## Features
 
 - **PDF metadata removal** - Clean author, creator, producer, and custom fields
-- **DOCX metadata stripping** - Remove document properties and custom XML
+- **Microsoft Office support** - Strip metadata from Word (DOCX), Excel (XLSX), PowerPoint (PPTX)
 - **JPEG EXIF removal** - Strip GPS, camera, and other EXIF data from photos
 - **PNG metadata removal** - Clean text chunks and embedded metadata
 - **WebP metadata removal** - Strip EXIF and XMP data from modern web images
@@ -39,7 +39,7 @@ Privacy-focused metadata removal tool for documents and images. Strip identifyin
 git clone https://github.com/KnowOneActual/meta-stripper.git
 cd meta-stripper
 
-# Checkout the image support branch
+# Checkout the feature branch
 git checkout feature/image-support
 
 # Install in development mode
@@ -71,17 +71,17 @@ See our [ROADMAP](ROADMAP.md) for the timeline toward v1.0.0 and public package 
 
 ```bash
 # Strip metadata from documents
-metastripper document.pdf
+metastripper document.pdf report.xlsx presentation.pptx
 metastripper contract.docx
 
 # Strip EXIF data from photos
 metastripper photo.jpg vacation.png modern_image.webp
 
-# Process multiple files
-metastripper report.pdf photo.jpg contract.docx
+# Process multiple files of different types
+metastripper report.pdf photo.jpg spreadsheet.xlsx
 
 # View metadata without stripping
-metastripper --show photo.jpg
+metastripper --show document.xlsx
 ```
 
 > 💡 **New to metadata removal?** Check out [Why Metadata Matters](WHY_METADATA_MATTERS.md) to understand the risks and [Quick Reference](QUICK_REFERENCE.md) for common usage patterns.
@@ -94,28 +94,31 @@ metastripper --show photo.jpg
 # Strip metadata - creates document_no_metadata.pdf
 metastripper document.pdf
 
+# Strip from Excel - creates report_no_metadata.xlsx
+metastripper report.xlsx
+
+# Strip from PowerPoint - creates presentation_no_metadata.pptx
+metastripper presentation.pptx
+
 # Strip EXIF from photo - creates photo_no_metadata.jpg
 metastripper photo.jpg
-
-# Strip metadata from WebP - creates image_no_metadata.webp
-metastripper image.webp
 
 # Specify output filename
 metastripper input.docx -o clean_output.docx
 
 # View metadata before stripping
 metastripper --show document.pdf
-metastripper --show photo.jpg
+metastripper --show spreadsheet.xlsx
 ```
 
 ### Multiple Files
 
 ```bash
 # Process multiple files of different types
-metastripper file1.pdf file2.docx photo.jpg image.webp
+metastripper file1.pdf file2.docx photo.jpg report.xlsx
 
 # Use wildcards (bash)
-metastripper *.pdf
+metastripper *.pdf *.docx *.xlsx
 metastripper *.jpg *.png *.webp
 ```
 
@@ -138,13 +141,20 @@ optional arguments:
 
 ## Supported Formats
 
+### Documents
 - ✅ PDF (.pdf)
 - ✅ Microsoft Word (.docx)
-- ✅ JPEG/JPG images (.jpg, .jpeg)
-- ✅ PNG images (.png)
-- ✅ WebP images (.webp)
+- ✅ Microsoft Excel (.xlsx)
+- ✅ Microsoft PowerPoint (.pptx)
+
+### Images  
+- ✅ JPEG/JPG (.jpg, .jpeg)
+- ✅ PNG (.png)
+- ✅ WebP (.webp)
+
+### Planned
 - 🚧 HEIC/HEIF images - Under evaluation
-- 🚧 LibreOffice (.odt, .ods) - Planned for v0.3.0
+- 🚧 LibreOffice (.odt, .ods, .odp) - Planned for v0.5.0
 
 ## How It Works
 
@@ -157,12 +167,16 @@ Removes standard metadata fields including:
 - Title
 - Keywords
 
-### DOCX Files
+### Office Files (DOCX, XLSX, PPTX)
 Uses direct ZIP manipulation to:
-- Remove `docProps/app.xml` (extended properties)
-- Clean `docProps/core.xml` (core properties)
+- Remove `docProps/app.xml` (extended properties: application, company, manager)
+- Clean `docProps/core.xml` (core properties: author, title, subject, keywords, dates)
 - Remove `docProps/custom.xml` (custom properties)
-- Preserve document content and formatting
+- Preserve all document content, worksheets, slides, and formatting
+
+**DOCX**: Preserves text, images, styles, headers/footers  
+**XLSX**: Preserves all worksheets, formulas, charts, formatting  
+**PPTX**: Preserves all slides, layouts, themes, animations, media
 
 ### JPEG/JPG Files
 Removes EXIF metadata including:
@@ -220,14 +234,16 @@ meta-stripper/
 ├── src/
 │   └── metastripper/
 │       ├── __init__.py
-│       ├── __main__.py          # Entry point for python -m metastripper
+│       ├── __main__.py          # Entry point
 │       ├── cli.py               # Command-line interface
 │       ├── core.py              # Core functionality
 │       └── handlers/
 │           ├── __init__.py
 │           ├── base.py          # Abstract handler
 │           ├── pdf.py           # PDF handler
-│           ├── docx.py          # DOCX handler
+│           ├── docx.py          # Word handler
+│           ├── xlsx.py          # Excel handler
+│           ├── pptx.py          # PowerPoint handler
 │           ├── jpeg.py          # JPEG handler
 │           ├── png.py           # PNG handler
 │           └── webp.py          # WebP handler
@@ -244,7 +260,8 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 This tool removes **standard metadata fields** from documents and images. Please note:
 
-- ✅ Removes author, title, creation dates, EXIF, GPS, and similar metadata
+- ✅ Removes author, title, creation dates, company, manager fields
+- ✅ Removes EXIF, GPS, camera information from images
 - ✅ Safe for common privacy use cases
 - ❌ Does NOT remove steganographic data
 - ❌ Does NOT strip watermarks or visual identifiers
@@ -259,11 +276,12 @@ For maximum privacy, combine with other sanitization tools and manual review.
 ## Roadmap
 
 - [x] Image format support (JPEG, PNG, WebP) - **v0.2.0**
+- [x] Office format support (XLSX, PPTX) - **v0.2.0**
 - [ ] HEIC/HEIF image support (evaluation in progress)
 - [ ] Batch directory processing with `--recursive`
 - [ ] In-place editing with `--in-place`
 - [ ] Selective metadata preservation
-- [ ] ODF format support (ODT, ODS)
+- [ ] LibreOffice format support (ODT, ODS, ODP) - **v0.5.0**
 - [ ] GUI for desktop users
 - [ ] Homebrew formula for macOS
 - [ ] RPM package for Fedora/RHEL
