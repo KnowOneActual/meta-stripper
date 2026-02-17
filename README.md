@@ -8,6 +8,14 @@ Privacy-focused metadata removal tool for documents. Strip identifying informati
 
 > **⚠️ Project Status**: This is a concept project in early development stages. The tool is actively being developed and will be updated consistently. All feedback, suggestions, and contributions are welcome! Please open an [issue](https://github.com/KnowOneActual/meta-stripper/issues) or [discussion](https://github.com/KnowOneActual/meta-stripper/discussions) to share your thoughts.
 
+## Documentation
+
+- **📚 [Why Metadata Matters](WHY_METADATA_MATTERS.md)** - Comprehensive guide explaining metadata risks and why removal is critical for production workflows
+- **⚡ [Quick Reference](QUICK_REFERENCE.md)** - One-page guide for common use cases and best practices
+- **🗺️ [Roadmap](ROADMAP.md)** - Future features and version planning
+- **🔒 [Security Policy](SECURITY.md)** - Security guidelines and vulnerability reporting
+- **🤝 [Contributing](CONTRIBUTING.md)** - How to contribute to the project
+
 ## Features
 
 - **PDF metadata removal** - Clean author, creator, producer, and custom fields
@@ -65,6 +73,8 @@ metastripper report.pdf contract.docx
 # View metadata without stripping
 metastripper --show document.pdf
 ```
+
+> 💡 **New to metadata removal?** Check out [Why Metadata Matters](WHY_METADATA_MATTERS.md) to understand the risks and [Quick Reference](QUICK_REFERENCE.md) for common usage patterns.
 
 ## Usage
 
@@ -187,6 +197,8 @@ This tool removes **standard metadata fields** from documents. Please note:
 - ❌ Does NOT guarantee complete anonymization
 
 For maximum privacy, combine with other sanitization tools and manual review.
+
+**Want to understand why metadata removal matters?** Read our comprehensive guide: [Why Metadata Matters](WHY_METADATA_MATTERS.md)
 
 ## Roadmap
 
