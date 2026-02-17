@@ -5,6 +5,8 @@ from typing import Type
 from .base import BaseHandler
 from .pdf import PDFHandler
 from .docx import DOCXHandler
+from .xlsx import XLSXHandler
+from .pptx import PPTXHandler
 from .jpeg import JPEGHandler
 from .png import PNGHandler
 from .webp import WebPHandler
@@ -13,6 +15,8 @@ from .webp import WebPHandler
 HANDLER_MAP = {
     '.pdf': PDFHandler,
     '.docx': DOCXHandler,
+    '.xlsx': XLSXHandler,
+    '.pptx': PPTXHandler,
     '.jpg': JPEGHandler,
     '.jpeg': JPEGHandler,
     '.png': PNGHandler,
@@ -48,6 +52,8 @@ __all__ = [
     'BaseHandler',
     'PDFHandler',
     'DOCXHandler',
+    'XLSXHandler',
+    'PPTXHandler',
     'JPEGHandler',
     'PNGHandler',
     'WebPHandler',
