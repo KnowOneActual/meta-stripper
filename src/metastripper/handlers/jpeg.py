@@ -65,8 +65,8 @@ class JPEGHandler(BaseHandler):
         """
         try:
             with Image.open(input_path) as img:
-                # Get image data without EXIF
-                data = list(img.getdata())
+                # Get image data without EXIF using non-deprecated method
+                data = list(img.get_flattened_data())
 
                 # Create new image without EXIF metadata
                 # Convert to RGB if necessary (handles RGBA, LA, etc.)
@@ -84,12 +84,12 @@ class JPEGHandler(BaseHandler):
                 clean_img.putdata(data)
 
                 # Save without EXIF metadata
-                # Quality=95 provides good balance between quality and file size
+                # Quality=95 with optimize=False helps maintain file size
                 clean_img.save(
                     output_path,
                     format="JPEG",
                     quality=95,
-                    optimize=True,
+                    optimize=False,
                     exif=b"",  # Explicitly set empty EXIF
                 )
 
