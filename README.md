@@ -1,6 +1,6 @@
 # meta-stripper
 
-Privacy-focused metadata removal tool for documents and images. Strip identifying information from PDFs, DOCX files, JPEGs, PNGs, and more with a simple command.
+Privacy-focused metadata removal tool for documents and images. Strip identifying information from PDFs, DOCX files, JPEGs, PNGs, WebP, and more with a simple command.
 
 [![Tests](https://github.com/KnowOneActual/meta-stripper/workflows/Tests/badge.svg)](https://github.com/KnowOneActual/meta-stripper/actions)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -22,6 +22,7 @@ Privacy-focused metadata removal tool for documents and images. Strip identifyin
 - **DOCX metadata stripping** - Remove document properties and custom XML
 - **JPEG EXIF removal** - Strip GPS, camera, and other EXIF data from photos
 - **PNG metadata removal** - Clean text chunks and embedded metadata
+- **WebP metadata removal** - Strip EXIF and XMP data from modern web images
 - **Batch processing** - Handle multiple files at once
 - **Cross-platform** - Works on Linux (Fedora) and macOS
 - **Lightweight** - Minimal dependencies, fast execution
@@ -74,7 +75,7 @@ metastripper document.pdf
 metastripper contract.docx
 
 # Strip EXIF data from photos
-metastripper photo.jpg vacation.png
+metastripper photo.jpg vacation.png modern_image.webp
 
 # Process multiple files
 metastripper report.pdf photo.jpg contract.docx
@@ -96,6 +97,9 @@ metastripper document.pdf
 # Strip EXIF from photo - creates photo_no_metadata.jpg
 metastripper photo.jpg
 
+# Strip metadata from WebP - creates image_no_metadata.webp
+metastripper image.webp
+
 # Specify output filename
 metastripper input.docx -o clean_output.docx
 
@@ -108,11 +112,11 @@ metastripper --show photo.jpg
 
 ```bash
 # Process multiple files of different types
-metastripper file1.pdf file2.docx photo.jpg
+metastripper file1.pdf file2.docx photo.jpg image.webp
 
 # Use wildcards (bash)
 metastripper *.pdf
-metastripper *.jpg *.png
+metastripper *.jpg *.png *.webp
 ```
 
 ### Options
@@ -138,7 +142,8 @@ optional arguments:
 - ✅ Microsoft Word (.docx)
 - ✅ JPEG/JPG images (.jpg, .jpeg)
 - ✅ PNG images (.png)
-- 🚧 WebP images - Planned for v0.2.1
+- ✅ WebP images (.webp)
+- 🚧 HEIC/HEIF images - Under evaluation
 - 🚧 LibreOffice (.odt, .ods) - Planned for v0.3.0
 
 ## How It Works
@@ -178,6 +183,14 @@ Removes metadata chunks including:
 - Embedded EXIF data (if present)
 - Preserves transparency
 
+### WebP Files
+Removes metadata including:
+- EXIF data (GPS, camera info, dates)
+- XMP metadata
+- ICC profiles (optional)
+- Software information
+- Preserves lossless/lossy format (90% quality for lossy)
+
 ## Development
 
 ### Setup
@@ -216,7 +229,8 @@ meta-stripper/
 │           ├── pdf.py           # PDF handler
 │           ├── docx.py          # DOCX handler
 │           ├── jpeg.py          # JPEG handler
-│           └── png.py           # PNG handler
+│           ├── png.py           # PNG handler
+│           └── webp.py          # WebP handler
 ├── tests/                       # Test suite
 ├── pyproject.toml              # Project configuration
 └── README.md
@@ -236,6 +250,7 @@ This tool removes **standard metadata fields** from documents and images. Please
 - ❌ Does NOT strip watermarks or visual identifiers
 - ❌ Does NOT guarantee complete anonymization
 - ⚠️ JPEG processing may slightly reduce image quality (uses 95% quality setting)
+- ⚠️ WebP processing uses 90% quality for lossy images
 
 For maximum privacy, combine with other sanitization tools and manual review.
 
@@ -243,8 +258,8 @@ For maximum privacy, combine with other sanitization tools and manual review.
 
 ## Roadmap
 
-- [x] Image format support (JPEG, PNG) - **v0.2.0**
-- [ ] WebP image support
+- [x] Image format support (JPEG, PNG, WebP) - **v0.2.0**
+- [ ] HEIC/HEIF image support (evaluation in progress)
 - [ ] Batch directory processing with `--recursive`
 - [ ] In-place editing with `--in-place`
 - [ ] Selective metadata preservation
