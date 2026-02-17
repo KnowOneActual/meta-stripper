@@ -1,27 +1,46 @@
 ---
-name: "🐛 Bug Report"
-about: Create a report to help us improve the project
-title: "[BUG] "
-labels: bug, needs-triage
+name: Bug Report
+about: Report a bug or unexpected behavior
+title: '[BUG] '
+labels: bug
 assignees: ''
-
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Description
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. See error
+A clear and concise description of the bug.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Steps to Reproduce
 
-**Screenshots or Logs**
-If applicable, add screenshots or log output to help explain your problem.
+1. Run command: `metastripper ...`
+2. With file type: ...
+3. See error: ...
 
-**System Details (please complete the following information):**
- - OS: [e.g. macOS, Ubuntu]
- - Version [e.g. 22.04]
+## Expected Behavior
+
+What you expected to happen.
+
+## Actual Behavior
+
+What actually happened.
+
+## Environment
+
+- **OS**: [e.g., Fedora 39, macOS 14.2]
+- **Python Version**: [e.g., 3.11.5]
+- **meta-stripper Version**: [e.g., 0.1.0]
+- **Installation Method**: [pip, pipx, source]
+
+## Error Output
+
+```
+Paste any error messages here
+```
+
+## Sample File
+
+If possible, attach a sample file that reproduces the issue (ensure it contains no sensitive data).
+
+## Additional Context
+
+Add any other context about the problem here.
