@@ -6,6 +6,8 @@ Privacy-focused metadata removal tool for documents. Strip identifying informati
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+> **⚠️ Project Status**: This is a concept project in early development stages. The tool is actively being developed and will be updated consistently. All feedback, suggestions, and contributions are welcome! Please open an [issue](https://github.com/KnowOneActual/meta-stripper/issues) or [discussion](https://github.com/KnowOneActual/meta-stripper/discussions) to share your thoughts.
+
 ## Features
 
 - **PDF metadata removal** - Clean author, creator, producer, and custom fields
@@ -183,6 +185,8 @@ For maximum privacy, combine with other sanitization tools and manual review.
 - [ ] Homebrew formula for macOS
 - [ ] RPM package for Fedora/RHEL
 
+See [ROADMAP.md](ROADMAP.md) for detailed version planning.
+
 ## License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
@@ -197,3 +201,4 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 If you encounter issues or have questions:
 - Open an issue: [GitHub Issues](https://github.com/KnowOneActual/meta-stripper/issues)
 - Check the [documentation](https://github.com/KnowOneActual/meta-stripper)
+- See the [ROADMAP](ROADMAP.md) for planned features
