@@ -21,20 +21,21 @@ class PDFHandler(BaseHandler):
             Dictionary of metadata or None if no metadata found
         """
         try:
-            with open(filepath, "rb") as f:
+            with filepath.open("rb") as f:
                 pdf_reader = PyPDF2.PdfReader(f)
                 metadata = pdf_reader.metadata
 
                 if metadata:
                     # Clean up metadata keys (remove leading '/')
-                    cleaned_metadata = {key.lstrip("/"): value for key, value in metadata.items()}
-                    return cleaned_metadata
+                    return {key.lstrip("/"): value for key, value in metadata.items()}
                 return None
 
         except PyPDF2.errors.PdfReadError:
-            raise ValueError(f"Could not read PDF file '{filepath}'. It may be corrupted.")
+            raise ValueError(
+                f"Could not read PDF file '{filepath}'. It may be corrupted."
+            ) from None
         except Exception as e:
-            raise Exception(f"Error reading PDF metadata: {e}")
+            raise Exception(f"Error reading PDF metadata: {e}") from e
 
     def strip_metadata(self, input_path: Path, output_path: Path) -> None:
         """Strip metadata from a PDF file.
@@ -44,7 +45,7 @@ class PDFHandler(BaseHandler):
             output_path: Path for output PDF
         """
         try:
-            with open(input_path, "rb") as f_in:
+            with input_path.open("rb") as f_in:
                 pdf_reader = PyPDF2.PdfReader(f_in)
                 pdf_writer = PyPDF2.PdfWriter()
 
@@ -65,8 +66,8 @@ class PDFHandler(BaseHandler):
                 )
 
                 # Write cleaned PDF
-                with open(output_path, "wb") as f_out:
+                with output_path.open("wb") as f_out:
                     pdf_writer.write(f_out)
 
         except Exception as e:
-            raise Exception(f"Error stripping PDF metadata: {e}")
+            raise Exception(f"Error stripping PDF metadata: {e}") from e
