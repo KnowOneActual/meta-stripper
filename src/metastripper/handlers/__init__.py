@@ -7,6 +7,7 @@ from .pdf import PDFHandler
 from .docx import DOCXHandler
 from .jpeg import JPEGHandler
 from .png import PNGHandler
+from .webp import WebPHandler
 
 
 HANDLER_MAP = {
@@ -15,6 +16,7 @@ HANDLER_MAP = {
     '.jpg': JPEGHandler,
     '.jpeg': JPEGHandler,
     '.png': PNGHandler,
+    '.webp': WebPHandler,
 }
 
 
@@ -48,5 +50,6 @@ __all__ = [
     'DOCXHandler',
     'JPEGHandler',
     'PNGHandler',
+    'WebPHandler',
     'get_handler'
 ]
