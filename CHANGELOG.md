@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.2.1 - Testing & Tooling Upgrade
+
+### Added
+- New pytest fixtures for generating temporary test files (images and PDFs) to avoid checking in binary assets [web:110][web:116].
+- Comprehensive tests for image handlers (JPEG, PNG, WebP), including:
+  - Reading metadata from images with EXIF/text data.
+  - Verifying metadata removal while preserving image dimensions and format.
+  - Integration tests for repeated stripping and invalid/nonexistent inputs.
+- Comprehensive tests for the PDF handler, including:
+  - Metadata detection and key normalization (removal of leading `/`).
+  - Metadata stripping while preserving page count and content.
+  - Error handling for invalid and corrupted PDFs, aligned with PyPDF2’s metadata behavior (default `Producer` field) [web:106].
+
+### Changed
+- Relaxed tests to account for realistic behavior:
+  - Allowing JPEG files to shrink after EXIF removal while still validating image integrity and dimensions [web:108][web:114].
+  - Allowing harmless WebP runtime fields (such as `loop` and `background`) to remain after stripping, while ensuring EXIF/XMP-like data is removed [web:107][web:116].
+  - Allowing PyPDF2’s default `Producer` metadata on PDFs that otherwise contain no user-supplied metadata [web:106].
+- Updated Ruff configuration to use the new `[tool.ruff.lint]` section, resolving deprecation warnings in recent Ruff versions [web:113].
+
+### Fixed
+- Resolved all Ruff linting violations across the codebase, including:
+  - Exception chaining (`B904`) by using `raise ... from e` / `from None`.
+  - Removal of bare `except` clauses (`E722`) in favor of explicit `except Exception`.
+  - Simplification of nested `with` statements (`SIM117`) and redundant branches (`RET505`, `RET507`).
+  - Replacement of `open()` with `Path.open()` where appropriate (`PTH123`).
+- Ensured handler modules and tests are fully Black/Ruff compliant and integrated into pre-commit hooks [web:124][web:123].
+
+### Quality & CI
+- Increased effective test coverage from minimal handler-registration tests to meaningful behavioral coverage across PDF and image handlers, with overall coverage now above the configured threshold.
+- Kept coverage threshold at a realistic level while the test suite is expanded, preventing false negatives in CI while still enforcing a minimum quality bar [web:126].
+
+
+
+
 ## [Unreleased]
 
 ### Planned for v0.2.0
