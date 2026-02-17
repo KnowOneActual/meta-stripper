@@ -196,7 +196,8 @@ class TestImageHandlersIntegration:
 
         handler = JPEGHandler()
 
-        with pytest.raises((OSError, ValueError)):
+        # Handlers wrap exceptions in Exception class
+        with pytest.raises(Exception, match="Failed to read EXIF metadata"):
             handler.display_metadata(invalid_file)
 
     def test_error_on_nonexistent_file(self, tmp_test_dir):
@@ -205,5 +206,6 @@ class TestImageHandlersIntegration:
 
         handler = JPEGHandler()
 
-        with pytest.raises((FileNotFoundError, OSError)):
+        # Handlers wrap exceptions in Exception class
+        with pytest.raises(Exception, match="Failed to read EXIF metadata"):
             handler.display_metadata(nonexistent)
