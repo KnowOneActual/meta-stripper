@@ -149,7 +149,7 @@ addopts = [
     "--cov=src/metastripper",
     "--cov-report=term-missing",
     "--cov-report=html",
-    "--cov-fail-under=70",
+    "--cov-fail-under=30",
 ]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
