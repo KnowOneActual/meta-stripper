@@ -37,8 +37,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Actions CI for automated testing
 - Comprehensive documentation:
   - README with installation and usage examples
+  - WHY_METADATA_MATTERS.md - Comprehensive guide explaining metadata risks and necessity
+  - QUICK_REFERENCE.md - One-page quick reference for common use cases
   - CONTRIBUTING guidelines
   - ROADMAP for future development
+  - SECURITY policy and vulnerability reporting
+  - CODE_OF_CONDUCT for community standards
   - Privacy and security notes
 
 ### Technical Details
@@ -47,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for `python -m metastripper` execution
 - Safe defaults: Never modifies original files
 - Auto-generated output filenames with `_no_metadata` suffix
+- Minimal dependencies (PyPDF2 only)
 
 [Unreleased]: https://github.com/KnowOneActual/meta-stripper/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/KnowOneActual/meta-stripper/releases/tag/v0.1.0
