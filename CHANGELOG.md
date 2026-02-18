@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-02-17
+
+### Fixed
+- Fixed critical bug in image handlers (JPEG, PNG, WebP) where `get_flattened_data()` method was called but not available in older Pillow versions
+  - All 7 failing tests now pass
+  - Replaced incorrect `get_flattened_data()` calls with proper `getdata()` method
+  - Added backwards-compatible version check to use `get_flattened_data()` when available (Pillow 12.1.0+) with fallback to `getdata()` for older versions
+- Fixed JPEG handler data extraction timing to occur after mode conversion, ensuring converted image data is properly used
+
+### Changed
+- Image handlers now future-proof for Pillow 14 (2027) when `getdata()` will be removed
+- Eliminated deprecation warnings for users with Pillow 12.1.0+
+- Maintained full backwards compatibility with older Pillow versions
+
 ## v0.2.1 - Testing & Tooling Upgrade
 
 ### Added
@@ -16,13 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive tests for the PDF handler, including:
   - Metadata detection and key normalization (removal of leading `/`).
   - Metadata stripping while preserving page count and content.
-  - Error handling for invalid and corrupted PDFs, aligned with PyPDF2’s metadata behavior (default `Producer` field) [web:106].
+  - Error handling for invalid and corrupted PDFs, aligned with PyPDF2's metadata behavior (default `Producer` field) [web:106].
 
 ### Changed
 - Relaxed tests to account for realistic behavior:
   - Allowing JPEG files to shrink after EXIF removal while still validating image integrity and dimensions [web:108][web:114].
   - Allowing harmless WebP runtime fields (such as `loop` and `background`) to remain after stripping, while ensuring EXIF/XMP-like data is removed [web:107][web:116].
-  - Allowing PyPDF2’s default `Producer` metadata on PDFs that otherwise contain no user-supplied metadata [web:106].
+  - Allowing PyPDF2's default `Producer` metadata on PDFs that otherwise contain no user-supplied metadata [web:106].
 - Updated Ruff configuration to use the new `[tool.ruff.lint]` section, resolving deprecation warnings in recent Ruff versions [web:113].
 
 ### Fixed
@@ -119,6 +133,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Auto-generated output filenames with `_no_metadata` suffix
 - Minimal dependencies (PyPDF2 only)
 
-[Unreleased]: https://github.com/KnowOneActual/meta-stripper/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/KnowOneActual/meta-stripper/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/KnowOneActual/meta-stripper/releases/tag/v0.2.2
 [0.2.0]: https://github.com/KnowOneActual/meta-stripper/releases/tag/v0.2.0
 [0.1.0]: https://github.com/KnowOneActual/meta-stripper/releases/tag/0.1.0
