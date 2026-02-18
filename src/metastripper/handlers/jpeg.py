@@ -76,7 +76,11 @@ class JPEGHandler(BaseHandler):
                         img = img.convert("RGB")
 
                 # Get image data without EXIF
-                data = list(img.getdata())
+                # Use get_flattened_data() for Pillow 12.1.0+, fallback to getdata() for older versions
+                if hasattr(img, "get_flattened_data"):
+                    data = list(img.get_flattened_data())
+                else:
+                    data = list(img.getdata())
 
                 # Create new image with same data but no metadata
                 clean_img = Image.new(img.mode, img.size)
