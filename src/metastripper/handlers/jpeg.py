@@ -65,10 +65,6 @@ class JPEGHandler(BaseHandler):
         """
         try:
             with Image.open(input_path) as img:
-                # Get image data without EXIF using non-deprecated method
-                data = list(img.get_flattened_data())
-
-                # Create new image without EXIF metadata
                 # Convert to RGB if necessary (handles RGBA, LA, etc.)
                 if img.mode not in ("RGB", "L"):
                     if img.mode == "RGBA":
@@ -78,6 +74,9 @@ class JPEGHandler(BaseHandler):
                         img = background
                     else:
                         img = img.convert("RGB")
+
+                # Get image data without EXIF
+                data = list(img.getdata())
 
                 # Create new image with same data but no metadata
                 clean_img = Image.new(img.mode, img.size)
