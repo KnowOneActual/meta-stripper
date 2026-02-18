@@ -47,10 +47,12 @@ class WebPHandler(BaseHandler):
                     pass  # No EXIF data
 
                 # Check for other metadata in info dict
+                # Skip internal WebP properties that aren't user metadata
                 if hasattr(img, "info") and img.info:
+                    skip_keys = {"icc_profile", "transparency", "loop", "background", "duration"}
                     for key, value in img.info.items():
-                        # Skip binary chunks we don't want to display
-                        if key in ("icc_profile", "transparency"):
+                        # Skip binary chunks and internal properties
+                        if key in skip_keys:
                             continue
 
                         # Handle bytes data
@@ -80,7 +82,11 @@ class WebPHandler(BaseHandler):
         try:
             with Image.open(input_path) as img:
                 # Get image data without metadata
-                data = list(img.getdata())
+                # Use get_flattened_data() for Pillow 12.1.0+, fallback to getdata() for older versions
+                if hasattr(img, "get_flattened_data"):
+                    data = list(img.get_flattened_data())
+                else:
+                    data = list(img.getdata())
 
                 # Create new image without metadata
                 clean_img = Image.new(img.mode, img.size)

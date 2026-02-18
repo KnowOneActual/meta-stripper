@@ -1,7 +1,5 @@
 """Tests for image file handlers (JPEG, PNG, WebP)."""
 
-from pathlib import Path
-
 import pytest
 from PIL import Image
 
@@ -172,22 +170,22 @@ class TestImageHandlersIntegration:
     def test_multiple_strip_operations(self, sample_jpeg_with_exif, tmp_test_dir):
         """Test stripping metadata multiple times doesn't corrupt file."""
         handler = JPEGHandler()
-        
+
         # First strip
         output1 = tmp_test_dir / "strip1.jpg"
         handler.strip_metadata(sample_jpeg_with_exif, output1)
-        
+
         # Second strip
         output2 = tmp_test_dir / "strip2.jpg"
         handler.strip_metadata(output1, output2)
-        
+
         # Both should be valid images
         img1 = Image.open(output1)
         img2 = Image.open(output2)
-        
+
         assert img1.size == img2.size
         assert img1.mode == img2.mode
-        
+
         img1.close()
         img2.close()
 
@@ -195,17 +193,19 @@ class TestImageHandlersIntegration:
         """Test handlers raise proper errors on invalid files."""
         invalid_file = tmp_test_dir / "not_an_image.jpg"
         invalid_file.write_text("This is not an image")
-        
+
         handler = JPEGHandler()
-        
-        with pytest.raises(Exception):
+
+        # Handlers wrap exceptions in Exception class
+        with pytest.raises(Exception, match="Failed to read EXIF metadata"):
             handler.display_metadata(invalid_file)
 
     def test_error_on_nonexistent_file(self, tmp_test_dir):
         """Test handlers raise proper errors on nonexistent files."""
         nonexistent = tmp_test_dir / "does_not_exist.jpg"
-        
+
         handler = JPEGHandler()
-        
-        with pytest.raises(Exception):
+
+        # Handlers wrap exceptions in Exception class
+        with pytest.raises(Exception, match="Failed to read EXIF metadata"):
             handler.display_metadata(nonexistent)

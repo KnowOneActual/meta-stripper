@@ -65,10 +65,6 @@ class JPEGHandler(BaseHandler):
         """
         try:
             with Image.open(input_path) as img:
-                # Get image data without EXIF
-                data = list(img.getdata())
-
-                # Create new image without EXIF metadata
                 # Convert to RGB if necessary (handles RGBA, LA, etc.)
                 if img.mode not in ("RGB", "L"):
                     if img.mode == "RGBA":
@@ -79,17 +75,24 @@ class JPEGHandler(BaseHandler):
                     else:
                         img = img.convert("RGB")
 
+                # Get image data without EXIF
+                # Use get_flattened_data() for Pillow 12.1.0+, fallback to getdata() for older versions
+                if hasattr(img, "get_flattened_data"):
+                    data = list(img.get_flattened_data())
+                else:
+                    data = list(img.getdata())
+
                 # Create new image with same data but no metadata
                 clean_img = Image.new(img.mode, img.size)
                 clean_img.putdata(data)
 
                 # Save without EXIF metadata
-                # Quality=95 provides good balance between quality and file size
+                # Quality=95 with optimize=False helps maintain file size
                 clean_img.save(
                     output_path,
                     format="JPEG",
                     quality=95,
-                    optimize=True,
+                    optimize=False,
                     exif=b"",  # Explicitly set empty EXIF
                 )
 

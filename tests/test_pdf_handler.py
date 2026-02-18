@@ -1,9 +1,7 @@
 """Tests for PDF file handler."""
 
-from pathlib import Path
-
-import pytest
 import PyPDF2
+import pytest
 
 from metastripper.handlers import PDFHandler
 
@@ -12,29 +10,30 @@ from metastripper.handlers import PDFHandler
 def sample_pdf_with_metadata(tmp_path):
     """Create a sample PDF with metadata."""
     filepath = tmp_path / "test_document.pdf"
-    
+
     # Create a PDF with metadata
     pdf_writer = PyPDF2.PdfWriter()
-    
+
     # Add a blank page
-    from PyPDF2.generic import RectangleObject
     page = PyPDF2.PageObject.create_blank_page(width=612, height=792)
     pdf_writer.add_page(page)
-    
+
     # Add metadata
-    pdf_writer.add_metadata({
-        "/Author": "Test Author",
-        "/Creator": "Test Creator",
-        "/Producer": "Test Producer",
-        "/Subject": "Test Subject",
-        "/Title": "Test Title",
-        "/Keywords": "test, metadata, privacy",
-    })
-    
+    pdf_writer.add_metadata(
+        {
+            "/Author": "Test Author",
+            "/Creator": "Test Creator",
+            "/Producer": "Test Producer",
+            "/Subject": "Test Subject",
+            "/Title": "Test Title",
+            "/Keywords": "test, metadata, privacy",
+        }
+    )
+
     # Write to file
     with filepath.open("wb") as f:
         pdf_writer.write(f)
-    
+
     return filepath
 
 
@@ -42,18 +41,18 @@ def sample_pdf_with_metadata(tmp_path):
 def sample_pdf_no_metadata(tmp_path):
     """Create a sample PDF without metadata."""
     filepath = tmp_path / "clean_document.pdf"
-    
+
     # Create a PDF without metadata
     pdf_writer = PyPDF2.PdfWriter()
-    
+
     # Add a blank page
     page = PyPDF2.PageObject.create_blank_page(width=612, height=792)
     pdf_writer.add_page(page)
-    
+
     # Write without metadata
     with filepath.open("wb") as f:
         pdf_writer.write(f)
-    
+
     return filepath
 
 
@@ -91,7 +90,7 @@ class TestPDFHandler:
 
         # Verify output has no meaningful metadata
         metadata_after = handler.display_metadata(output_path)
-        
+
         # Check that metadata is cleared (empty strings)
         if metadata_after:
             for key, value in metadata_after.items():
@@ -122,23 +121,23 @@ class TestPDFHandler:
         # Create multi-page PDF
         filepath = tmp_path / "multi_page.pdf"
         pdf_writer = PyPDF2.PdfWriter()
-        
+
         # Add multiple pages
-        for i in range(5):
+        for _i in range(5):
             page = PyPDF2.PageObject.create_blank_page(width=612, height=792)
             pdf_writer.add_page(page)
-        
+
         # Add metadata
         pdf_writer.add_metadata({"/Author": "Test", "/Title": "Multi-page Test"})
-        
+
         with filepath.open("wb") as f:
             pdf_writer.write(f)
-        
+
         # Strip metadata
         handler = PDFHandler()
         output_path = tmp_path / "stripped_multi.pdf"
         handler.strip_metadata(filepath, output_path)
-        
+
         # Verify 5 pages still exist
         with output_path.open("rb") as f:
             pdf = PyPDF2.PdfReader(f)
@@ -148,9 +147,9 @@ class TestPDFHandler:
         """Test handler raises error on invalid PDF."""
         invalid_file = tmp_path / "not_a_pdf.pdf"
         invalid_file.write_text("This is not a PDF")
-        
+
         handler = PDFHandler()
-        
+
         with pytest.raises((ValueError, Exception)):
             handler.display_metadata(invalid_file)
 
@@ -158,9 +157,9 @@ class TestPDFHandler:
         """Test handler raises error on corrupted PDF."""
         corrupted_file = tmp_path / "corrupted.pdf"
         corrupted_file.write_bytes(b"%PDF-1.4\nCorrupted data here")
-        
+
         handler = PDFHandler()
-        
+
         with pytest.raises((ValueError, Exception)):
             handler.display_metadata(corrupted_file)
 
@@ -168,8 +167,8 @@ class TestPDFHandler:
         """Test that metadata keys have leading '/' removed."""
         handler = PDFHandler()
         metadata = handler.display_metadata(sample_pdf_with_metadata)
-        
+
         if metadata:
             # All keys should not start with '/'
-            for key in metadata.keys():
+            for key in metadata:
                 assert not key.startswith("/"), f"Key still has '/': {key}"
