@@ -75,7 +75,11 @@ class PNGHandler(BaseHandler):
         try:
             with Image.open(input_path) as img:
                 # Load image data
-                data = list(img.getdata())
+                # Use get_flattened_data() for Pillow 12.1.0+, fallback to getdata() for older versions
+                if hasattr(img, "get_flattened_data"):
+                    data = list(img.get_flattened_data())
+                else:
+                    data = list(img.getdata())
 
                 # Create clean image with same mode and size
                 clean_img = Image.new(img.mode, img.size)
