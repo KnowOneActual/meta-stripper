@@ -81,8 +81,8 @@ class WebPHandler(BaseHandler):
         """
         try:
             with Image.open(input_path) as img:
-                # Get image data without metadata using non-deprecated method
-                data = list(img.get_flattened_data())
+                # Get image data without metadata
+                data = list(img.getdata())
 
                 # Create new image without metadata
                 clean_img = Image.new(img.mode, img.size)
