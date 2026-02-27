@@ -19,13 +19,20 @@ def display_metadata(filepath: Path) -> Optional[Dict[str, Any]]:
     return handler.display_metadata(filepath)
 
 
-def strip_metadata(input_path: Path, output_path: Optional[Path] = None) -> Path:
+def strip_metadata(
+    input_path: Path,
+    output_path: Optional[Path] = None,
+    keep_fields: Optional[list] = None,
+    remove_fields: Optional[list] = None,
+) -> Path:
     """Strip metadata from a file.
 
     Args:
         input_path: Path to the input file
         output_path: Optional path for output file. If not provided,
                     generates name with '_no_metadata' suffix
+        keep_fields: Optional list of fields to preserve
+        remove_fields: Optional list of fields to explicitly remove
 
     Returns:
         Path to the created output file
@@ -43,6 +50,6 @@ def strip_metadata(input_path: Path, output_path: Optional[Path] = None) -> Path
         output_path = input_path.parent / f"{stem}_no_metadata{suffix}"
 
     handler = get_handler(input_path)
-    handler.strip_metadata(input_path, output_path)
+    handler.strip_metadata(input_path, output_path, keep_fields=keep_fields, remove_fields=remove_fields)
 
     return output_path

@@ -53,22 +53,49 @@ class JPEGHandler(BaseHandler):
         except Exception as e:
             raise Exception(f"Failed to read EXIF metadata: {e}") from e
 
-    def strip_metadata(self, input_path: Path, output_path: Path) -> None:
+    def strip_metadata(
+        self,
+        input_path: Path,
+        output_path: Path,
+        keep_fields: Optional[list] = None,
+        remove_fields: Optional[list] = None,
+    ) -> None:
         """Strip EXIF metadata from a JPEG file.
 
         Args:
             input_path: Path to input JPEG file
             output_path: Path for output JPEG file
+            keep_fields: Optional list of fields to preserve
+            remove_fields: Optional list of fields to explicitly remove
 
         Raises:
             Exception: If stripping fails
         """
         try:
             with Image.open(input_path) as img:
+                # Get current EXIF if we need to filter
+                new_exif = None
+                if keep_fields or remove_fields:
+                    original_exif = img.getexif()
+                    if original_exif:
+                        new_exif = Image.Exif()
+                        for tag_id, value in original_exif.items():
+                            tag_name = TAGS.get(tag_id, str(tag_id))
+                            
+                            should_keep = False
+                            if keep_fields:
+                                if tag_name.lower() in [f.lower() for f in keep_fields]:
+                                    should_keep = True
+                            elif remove_fields:
+                                if tag_name.lower() not in [f.lower() for f in remove_fields]:
+                                    should_keep = True
+                            
+                            if should_keep:
+                                new_exif[tag_id] = value
+
                 # Convert to RGB if necessary (handles RGBA, LA, etc.)
                 if img.mode not in ("RGB", "L"):
                     if img.mode == "RGBA":
-                        # Create white background for transparency
                         background = Image.new("RGB", img.size, (255, 255, 255))
                         background.paste(img, mask=img.split()[3] if len(img.split()) > 3 else None)
                         img = background
@@ -76,24 +103,22 @@ class JPEGHandler(BaseHandler):
                         img = img.convert("RGB")
 
                 # Get image data without EXIF
-                # Use get_flattened_data() for Pillow 12.1.0+, fallback to getdata() for older versions
                 if hasattr(img, "get_flattened_data"):
                     data = list(img.get_flattened_data())
                 else:
                     data = list(img.getdata())
 
-                # Create new image with same data but no metadata
+                # Create new image
                 clean_img = Image.new(img.mode, img.size)
                 clean_img.putdata(data)
 
-                # Save without EXIF metadata
-                # Quality=95 with optimize=False helps maintain file size
+                # Save with filtered or empty EXIF
                 clean_img.save(
                     output_path,
                     format="JPEG",
                     quality=95,
                     optimize=False,
-                    exif=b"",  # Explicitly set empty EXIF
+                    exif=new_exif if new_exif else b"",
                 )
 
         except Exception as e:

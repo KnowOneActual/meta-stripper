@@ -69,41 +69,71 @@ class WebPHandler(BaseHandler):
         except Exception as e:
             raise Exception(f"Failed to read WebP metadata: {e}") from e
 
-    def strip_metadata(self, input_path: Path, output_path: Path) -> None:
+    def strip_metadata(
+        self,
+        input_path: Path,
+        output_path: Path,
+        keep_fields: Optional[list] = None,
+        remove_fields: Optional[list] = None,
+    ) -> None:
         """Strip metadata from a WebP file.
 
         Args:
             input_path: Path to input WebP file
             output_path: Path for output WebP file
+            keep_fields: Optional list of fields to preserve
+            remove_fields: Optional list of fields to explicitly remove
 
         Raises:
             Exception: If stripping fails
         """
         try:
             with Image.open(input_path) as img:
+                # Filter metadata if requested
+                new_exif = None
+                if keep_fields or remove_fields:
+                    original_exif = img.getexif()
+                    if original_exif:
+                        new_exif = Image.Exif()
+                        for tag_id, value in original_exif.items():
+                            tag_name = TAGS.get(tag_id, str(tag_id))
+                            
+                            should_keep = False
+                            if keep_fields:
+                                if f"EXIF_{tag_name}".lower() in [f.lower() for f in keep_fields] or \
+                                   tag_name.lower() in [f.lower() for f in keep_fields]:
+                                    should_keep = True
+                            elif remove_fields:
+                                if f"EXIF_{tag_name}".lower() not in [f.lower() for f in remove_fields] and \
+                                   tag_name.lower() not in [f.lower() for f in remove_fields]:
+                                    should_keep = True
+                            
+                            if should_keep:
+                                new_exif[tag_id] = value
+
                 # Get image data without metadata
-                # Use get_flattened_data() for Pillow 12.1.0+, fallback to getdata() for older versions
                 if hasattr(img, "get_flattened_data"):
                     data = list(img.get_flattened_data())
                 else:
                     data = list(img.getdata())
 
-                # Create new image without metadata
+                # Create new image
                 clean_img = Image.new(img.mode, img.size)
                 clean_img.putdata(data)
 
                 # Save without metadata
-                # Quality=90 is a good balance for WebP (WebP is more efficient than JPEG)
                 save_kwargs = {
                     "format": "WEBP",
                     "quality": 90,
-                    "method": 6,  # Slowest but best compression
-                    "exif": b"",  # Explicitly set empty EXIF
+                    "method": 6,
+                    "exif": new_exif if new_exif else b"",
                 }
 
-                # Preserve lossless flag if it was lossless
-                if hasattr(img, "info") and "lossless" in img.info:
-                    save_kwargs["lossless"] = img.info["lossless"]
+                # Preserve WebP-specific flags
+                if hasattr(img, "info"):
+                    for key in ("lossless", "icc_profile", "transparency", "loop", "background", "duration"):
+                        if key in img.info:
+                            save_kwargs[key] = img.info[key]
 
                 clean_img.save(output_path, **save_kwargs)
 

@@ -48,12 +48,20 @@ class PDFHandler(BaseHandler):
         except Exception as e:
             raise Exception(f"Error reading PDF metadata: {e}") from e
 
-    def strip_metadata(self, input_path: Path, output_path: Path) -> None:
+    def strip_metadata(
+        self,
+        input_path: Path,
+        output_path: Path,
+        keep_fields: Optional[list] = None,
+        remove_fields: Optional[list] = None,
+    ) -> None:
         """Strip metadata from a PDF file.
 
         Args:
             input_path: Path to input PDF
             output_path: Path for output PDF
+            keep_fields: Optional list of fields to preserve
+            remove_fields: Optional list of fields to explicitly remove
         """
         try:
             with input_path.open("rb") as f_in:
@@ -64,17 +72,47 @@ class PDFHandler(BaseHandler):
                 for page in pdf_reader.pages:
                     pdf_writer.add_page(page)
 
-                # Clear metadata by setting empty values
-                pdf_writer.add_metadata(
-                    {
-                        "/Author": "",
-                        "/Creator": "",
-                        "/Producer": "",
-                        "/Subject": "",
-                        "/Title": "",
-                        "/Keywords": "",
-                    }
-                )
+                # Get original metadata
+                original_metadata = pdf_reader.metadata
+                new_metadata = {}
+
+                # Normalization: internal keys start with /, display keys don't
+                # We'll normalize to names without / for comparison
+                standard_fields = ["Author", "Creator", "Producer", "Subject", "Title", "Keywords"]
+
+                if original_metadata:
+                    for key, value in original_metadata.items():
+                        clean_key = key.lstrip("/")
+                        
+                        # Decision logic for selective stripping
+                        should_keep = False
+                        if keep_fields:
+                            # If keep_fields is specified, only keep those
+                            if clean_key.lower() in [f.lower() for f in keep_fields]:
+                                should_keep = True
+                        elif remove_fields:
+                            # If remove_fields is specified, keep everything else
+                            if clean_key.lower() not in [f.lower() for f in remove_fields]:
+                                should_keep = True
+                        else:
+                            # Default: remove all standard fields
+                            if clean_key not in standard_fields:
+                                should_keep = True
+
+                        if should_keep:
+                            new_metadata[key] = value
+                        else:
+                            # Explicitly clear standard fields
+                            if clean_key in standard_fields:
+                                new_metadata[key] = ""
+
+                # If no metadata exists but we want to clear standard ones
+                if not original_metadata and not keep_fields:
+                    for field in standard_fields:
+                        new_metadata[f"/{field}"] = ""
+
+                # Apply metadata
+                pdf_writer.add_metadata(new_metadata)
 
                 # Write cleaned PDF
                 with output_path.open("wb") as f_out:

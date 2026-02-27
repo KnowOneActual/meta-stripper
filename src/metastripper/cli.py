@@ -89,6 +89,20 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     )
 
     parser.add_argument(
+        "--keep",
+        nargs="+",
+        metavar="FIELD",
+        help="Selective preservation: Keep only these metadata fields",
+    )
+
+    parser.add_argument(
+        "--remove",
+        nargs="+",
+        metavar="FIELD",
+        help="Selective removal: Remove only these metadata fields",
+    )
+
+    parser.add_argument(
         "-s", "--show", action="store_true", help="Display metadata without stripping"
     )
 
@@ -126,6 +140,8 @@ def process_file(
     in_place: bool = False,
     backup: bool = False,
     dry_run: bool = False,
+    keep_fields: Optional[list] = None,
+    remove_fields: Optional[list] = None,
 ) -> bool:
     """Process a single file.
 
@@ -137,6 +153,8 @@ def process_file(
         in_place: If True, overwrite original file
         backup: If True, create backup of original
         dry_run: If True, don't perform actual processing
+        keep_fields: Optional list of fields to preserve
+        remove_fields: Optional list of fields to explicitly remove
 
     Returns:
         True if successful, False otherwise
@@ -167,7 +185,12 @@ def process_file(
             # For in-place, strip to a temporary file first
             temp_output = filepath.parent / f".tmp_{filepath.name}"
             try:
-                strip_metadata(filepath, temp_output)
+                strip_metadata(
+                    filepath,
+                    temp_output,
+                    keep_fields=keep_fields,
+                    remove_fields=remove_fields,
+                )
 
                 if backup:
                     backup_path = filepath.with_suffix(filepath.suffix + ".bak")
@@ -183,7 +206,9 @@ def process_file(
                 if temp_output.exists():
                     temp_output.unlink()
         else:
-            result_path = strip_metadata(filepath, output_path)
+            result_path = strip_metadata(
+                filepath, output_path, keep_fields=keep_fields, remove_fields=remove_fields
+            )
             print(f"✓ Successfully stripped metadata from {filepath.name}")
             print(f"  Output saved to: {result_path}")
             return True
@@ -222,6 +247,10 @@ def main() -> int:
         print("✗ Error: --in-place and --output are mutually exclusive", file=sys.stderr)
         return 1
 
+    if args.keep and args.remove:
+        print("✗ Error: --keep and --remove are mutually exclusive", file=sys.stderr)
+        return 1
+
     if args.dry_run:
         print(f"--- DRY RUN: Found {len(files_to_process)} files to process ---")
         if not args.verbose:
@@ -241,6 +270,8 @@ def main() -> int:
             args.in_place,
             args.backup,
             args.dry_run,
+            keep_fields=args.keep,
+            remove_fields=args.remove,
         ):
             success_count += 1
 
