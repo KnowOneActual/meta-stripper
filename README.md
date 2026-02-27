@@ -79,6 +79,18 @@ metastripper report.pdf photo.jpg spreadsheet.xlsx
 
 # View metadata without stripping
 metastripper --show document.xlsx
+
+# Process a directory recursively
+metastripper -r documents/
+
+# Overwrite original files in-place
+metastripper -i photo.jpg --backup
+
+# Selective control: keep only Author and Title
+metastripper document.pdf --keep Author Title
+
+# Selective control: remove only GPS data
+metastripper photo.jpg --remove GPS
 ```
 
 > 💡 **New to metadata removal?** Check out [Why Metadata Matters](WHY_METADATA_MATTERS.md) to understand the risks and [Quick Reference](QUICK_REFERENCE.md) for common usage patterns.
@@ -122,18 +134,62 @@ metastripper *.jpg *.png *.webp
 ### Options
 
 ```
-usage: metastripper [-h] [-o OUTPUT] [-s] [-v] [--version] files [files ...]
+usage: metastripper [-h] [-o OUTPUT] [-r] [-i] [--backup] [--dry-run]
+                    [--keep FIELD [FIELD ...]] [--remove FIELD [FIELD ...]]
+                    [-s] [-v] [--version] files [files ...]
 
 positional arguments:
-  files                 File(s) to process
+  files                 File(s) or director(ies) to process
 
 optional arguments:
   -h, --help            show this help message and exit
   -o OUTPUT, --output OUTPUT
                         Output file path (only valid for single file input)
+  -r, --recursive       Recursively process directories
+  -i, --in-place        Modify files in-place (overwrites original)
+  --backup              Create a backup file when using --in-place
+  --dry-run             Show which files would be processed without modification
+  --keep FIELD [FIELD ...]
+                        Selective preservation: Keep only these metadata fields
+  --remove FIELD [FIELD ...]
+                        Selective removal: Remove only these metadata fields
   -s, --show            Display metadata without stripping
   -v, --verbose         Enable verbose output
   --version             show program's version number and exit
+```
+
+### Advanced Usage
+
+#### Recursive Directory Processing
+```bash
+# Process all supported files in a directory and its subdirectories
+metastripper -r /path/to/docs/
+```
+
+#### In-Place Editing
+```bash
+# Clean a file and overwrite the original
+metastripper -i document.pdf
+
+# Clean in-place but keep a .bak backup for safety
+metastripper -i document.pdf --backup
+```
+
+#### Selective Metadata Control
+```bash
+# Remove everything EXCEPT the Author and Title
+metastripper document.pdf --keep Author Title
+
+# Remove ONLY the GPS coordinates from a photo
+metastripper photo.jpg --remove GPS
+
+# Note: --keep and --remove are mutually exclusive
+```
+
+#### Dry Run
+```bash
+# Preview what would be processed without making changes
+metastripper -r . --dry-run
 ```
 
 ## Supported Formats

@@ -20,12 +20,20 @@ class BaseHandler(ABC):
         """
 
     @abstractmethod
-    def strip_metadata(self, input_path: Path, output_path: Path) -> None:
+    def strip_metadata(
+        self,
+        input_path: Path,
+        output_path: Path,
+        keep_fields: Optional[list] = None,
+        remove_fields: Optional[list] = None,
+    ) -> None:
         """Strip metadata from a file.
 
         Args:
             input_path: Path to input file
             output_path: Path for output file
+            keep_fields: Optional list of fields to preserve
+            remove_fields: Optional list of fields to explicitly remove
 
         Raises:
             Exception: If stripping fails

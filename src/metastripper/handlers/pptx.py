@@ -88,12 +88,20 @@ class PPTXHandler(BaseHandler):
         except Exception as e:
             raise Exception(f"Failed to read PPTX metadata: {e}") from e
 
-    def strip_metadata(self, input_path: Path, output_path: Path) -> None:
+    def strip_metadata(
+        self,
+        input_path: Path,
+        output_path: Path,
+        keep_fields: Optional[list] = None,
+        remove_fields: Optional[list] = None,
+    ) -> None:
         """Strip metadata from a PPTX file.
 
         Args:
             input_path: Path to input PPTX file
             output_path: Path for output PPTX file
+            keep_fields: Optional list of fields to preserve (not yet implemented)
+            remove_fields: Optional list of fields to explicitly remove (not yet implemented)
 
         Raises:
             Exception: If stripping fails

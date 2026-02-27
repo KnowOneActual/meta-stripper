@@ -87,12 +87,20 @@ class XLSXHandler(BaseHandler):
         except Exception as e:
             raise Exception(f"Failed to read XLSX metadata: {e}") from e
 
-    def strip_metadata(self, input_path: Path, output_path: Path) -> None:
+    def strip_metadata(
+        self,
+        input_path: Path,
+        output_path: Path,
+        keep_fields: Optional[list] = None,
+        remove_fields: Optional[list] = None,
+    ) -> None:
         """Strip metadata from an XLSX file.
 
         Args:
             input_path: Path to input XLSX file
             output_path: Path for output XLSX file
+            keep_fields: Optional list of fields to preserve (not yet implemented)
+            remove_fields: Optional list of fields to explicitly remove (not yet implemented)
 
         Raises:
             Exception: If stripping fails

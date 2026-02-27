@@ -62,37 +62,69 @@ class PNGHandler(BaseHandler):
         except Exception as e:
             raise Exception(f"Failed to read PNG metadata: {e}") from e
 
-    def strip_metadata(self, input_path: Path, output_path: Path) -> None:
+    def strip_metadata(
+        self,
+        input_path: Path,
+        output_path: Path,
+        keep_fields: Optional[list] = None,
+        remove_fields: Optional[list] = None,
+    ) -> None:
         """Strip metadata from a PNG file.
 
         Args:
             input_path: Path to input PNG file
             output_path: Path for output PNG file
+            keep_fields: Optional list of fields to preserve
+            remove_fields: Optional list of fields to explicitly remove
 
         Raises:
             Exception: If stripping fails
         """
         try:
+            from PIL import PngImagePlugin
+
             with Image.open(input_path) as img:
+                # Filter metadata if requested
+                new_pnginfo = None
+                if keep_fields or remove_fields:
+                    new_pnginfo = PngImagePlugin.PngInfo()
+                    if hasattr(img, "info") and img.info:
+                        for key, value in img.info.items():
+                            # Skip internal fields
+                            if key in ("transparency", "gamma", "dpi", "icc_profile"):
+                                continue
+
+                            should_keep = False
+                            if keep_fields:
+                                if key.lower() in [f.lower() for f in keep_fields]:
+                                    should_keep = True
+                            elif remove_fields:
+                                if key.lower() not in [f.lower() for f in remove_fields]:
+                                    should_keep = True
+
+                            if should_keep:
+                                new_pnginfo.add_text(key, str(value))
+
                 # Load image data
-                # Use get_flattened_data() for Pillow 12.1.0+, fallback to getdata() for older versions
                 if hasattr(img, "get_flattened_data"):
                     data = list(img.get_flattened_data())
                 else:
                     data = list(img.getdata())
 
-                # Create clean image with same mode and size
+                # Create clean image
                 clean_img = Image.new(img.mode, img.size)
                 clean_img.putdata(data)
 
-                # Save without metadata
-                # PngInfo object would add metadata, so we don't use it
+                # Save options
                 save_kwargs = {
                     "format": "PNG",
                     "optimize": True,
                 }
 
-                # Preserve transparency if present (but not as metadata)
+                if new_pnginfo:
+                    save_kwargs["pnginfo"] = new_pnginfo
+
+                # Preserve transparency if present
                 if "transparency" in img.info:
                     save_kwargs["transparency"] = img.info["transparency"]
 

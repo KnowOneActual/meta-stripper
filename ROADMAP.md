@@ -63,30 +63,20 @@ metastripper *.pdf --in-place --dry-run
 metastripper images/ -r --verbose --parallel
 ```
 
-## Version 0.4.0 (Selective Metadata Control)
+## Version 0.4.0 (Enhanced CLI & Selective Control) ✅
 
-**Target**: May 2026
-**Priority**: Medium
+**Status**: Completed (February 2026)
 
 ### Features
-- [ ] Selective field preservation (`--keep author,title`)
-- [ ] Selective field removal (`--remove gps,dates`)
-- [ ] Metadata profiles (presets for common use cases)
-- [ ] Before/after metadata comparison (`--verify`)
-- [ ] JSON output for scripting (`--json`)
-- [ ] Metadata export to file (`--export metadata.json`)
-
-### Use Cases
-```bash
-# Keep author but remove everything else
-metastripper document.pdf --keep author
-
-# Only remove GPS and timestamps
-metastripper photo.jpg --remove gps,dates
-
-# Privacy profile (remove all identifying info)
-metastripper file.pdf --profile privacy
-```
+- [x] Recursive directory processing (`--recursive`, `-r`)
+- [x] In-place editing with confirmation (`--in-place`)
+- [x] Backup creation option (`--backup`)
+- [x] Dry-run mode (`--dry-run`)
+- [x] Selective field preservation (`--keep author,title`)
+- [x] Selective field removal (`--remove gps,dates`)
+- [x] Supports PDF, JPEG, PNG, WebP
+- [x] Enhanced CLI discovery with extension filtering
+- [x] Comprehensive CLI and selective test suites
 
 ## Version 0.5.0 (Additional Document Formats)
 
