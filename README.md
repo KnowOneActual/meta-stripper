@@ -39,9 +39,6 @@ Privacy-focused metadata removal tool for documents and images. Strip identifyin
 git clone https://github.com/KnowOneActual/meta-stripper.git
 cd meta-stripper
 
-# Checkout the feature branch
-git checkout feature/image-support
-
 # Install in development mode
 pip install -e .
 

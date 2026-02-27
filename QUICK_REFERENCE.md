@@ -220,7 +220,7 @@ Are you sharing this document externally?
 **Solution:** Run `pip install -e .` from the meta-stripper directory
 
 **Problem:** File not supported  
-**Solution:** Currently supports PDF and DOCX only. See [ROADMAP](ROADMAP.md) for upcoming formats
+**Solution:** Currently supports PDF, Word (DOCX), Excel (XLSX), PowerPoint (PPTX), JPEG, PNG, and WebP. See [ROADMAP](ROADMAP.md) for upcoming formats
 
 **Problem:** Need to process many files  
 **Solution:** Use wildcards: `metastripper *.pdf` or provide multiple files

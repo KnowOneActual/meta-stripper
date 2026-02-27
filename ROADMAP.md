@@ -13,27 +13,35 @@ This document outlines the planned features and development priorities for meta-
 - [x] Basic test suite and GitHub Actions CI
 - [x] Comprehensive documentation
 
-## Version 0.2.0 (Image Support)
+## Version 0.2.0 (Image Support) ✅
 
-**Target**: March 2026
-**Priority**: High
+**Status**: Completed
 
 ### Features
-- [ ] JPEG EXIF metadata removal
-- [ ] PNG metadata (tEXt, iTXt chunks) removal
-- [ ] WebP metadata support
-- [ ] HEIC/HEIF metadata support (if feasible)
-- [ ] Image format auto-detection
-- [ ] Preserve image quality options
+- [x] JPEG EXIF metadata removal
+- [x] PNG metadata (tEXt, iTXt chunks) removal
+- [x] WebP metadata support
+- [x] Image format auto-detection
+- [x] Preserve image quality options
 
 ### Technical Tasks
-- [ ] Add Pillow dependency
-- [ ] Create ImageHandler base class
-- [ ] Implement format-specific handlers
-- [ ] Add test fixtures for each image format
-- [ ] Update documentation with image examples
+- [x] Add Pillow dependency
+- [x] Create ImageHandler base class
+- [x] Implement format-specific handlers
+- [x] Add test fixtures for each image format
+- [x] Update documentation with image examples
 
-## Version 0.3.0 (Enhanced CLI & Batch Processing)
+## Version 0.3.0 (Cleanup & Organization) ✅
+
+- [x] XLSX (Excel) metadata removal handler
+- [x] PPTX (PowerPoint) metadata removal handler
+- [x] Removed redundant `requirements.txt` and `requirements-dev.txt`
+- [x] Consolidated dependencies in `pyproject.toml`
+- [x] Replaced custom linting script with Ruff auto-fixes
+- [x] Cleaned up project structure (removed empty `docs/`)
+- [x] Updated `Makefile` for better artifact cleaning
+
+## Version 0.4.0 (Enhanced CLI & Batch Processing)
 
 **Target**: April 2026
 **Priority**: High
@@ -92,8 +100,6 @@ metastripper file.pdf --profile privacy
 - [ ] Use ZIP manipulation similar to DOCX
 
 ### Microsoft Office Formats
-- [ ] XLSX (Excel spreadsheets)
-- [ ] PPTX (PowerPoint presentations)
 - [ ] DOC (legacy Word format - via external tool)
 
 ### Other Formats
