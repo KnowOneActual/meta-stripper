@@ -53,9 +53,32 @@ metastripper --show sensitive_document.pdf
 metastripper internal_report.pdf -o client_report.pdf
 ```
 
-### Process All PDFs in Directory
+### Clean an Entire Directory Recursively
 ```bash
-metastripper *.pdf
+metastripper -r documents/
+```
+
+### Overwrite Original Files (In-Place)
+```bash
+metastripper -i photo.jpg --backup
+```
+
+### Keep Only Specific Metadata Fields
+```bash
+# Only Author and Title will be kept; all other fields removed
+metastripper document.pdf --keep Author Title
+```
+
+### Remove Only Specific Metadata Fields
+```bash
+# Only GPS data will be removed; all other fields preserved
+metastripper photo.jpg --remove GPS
+```
+
+### Preview Changes Before Acting
+```bash
+# See which files would be processed without any modifications
+metastripper -r docs/ --dry-run
 ```
 
 ---
@@ -146,10 +169,15 @@ Before sharing any document externally:
 # Basic usage
 metastripper <file>                    # Strip metadata, create new file
 metastripper file1.pdf file2.docx      # Process multiple files
-metastripper *.pdf                     # Process all PDFs (bash)
+metastripper -r <dir>                  # Process directory recursively
 
 # Options
 metastripper -o output.pdf input.pdf   # Specify output name
+metastripper -i document.pdf           # Clean original file in-place
+metastripper -i --backup file.pdf      # Clean in-place, create .bak backup
+metastripper --dry-run -r docs/        # Preview processing without acting
+metastripper --keep Author file.pdf    # Keep only Author field
+metastripper --remove GPS photo.jpg    # Remove only GPS metadata
 metastripper --show document.pdf       # Display metadata only
 metastripper -v document.pdf           # Verbose output
 metastripper --version                 # Show version

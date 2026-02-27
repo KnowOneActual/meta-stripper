@@ -65,7 +65,7 @@ metastripper images/ -r --verbose --parallel
 
 ## Version 0.4.0 (Enhanced CLI & Selective Control) ✅
 
-**Status**: Completed
+**Status**: Completed (February 2026)
 
 ### Features
 - [x] Recursive directory processing (`--recursive`, `-r`)
@@ -76,6 +76,7 @@ metastripper images/ -r --verbose --parallel
 - [x] Selective field removal (`--remove gps,dates`)
 - [x] Supports PDF, JPEG, PNG, WebP
 - [x] Enhanced CLI discovery with extension filtering
+- [x] Comprehensive CLI and selective test suites
 
 ## Version 0.5.0 (Additional Document Formats)
 

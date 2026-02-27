@@ -63,7 +63,13 @@ class DOCXHandler(BaseHandler):
         except Exception as e:
             raise Exception(f"Error reading DOCX metadata: {e}") from e
 
-    def strip_metadata(self, input_path: Path, output_path: Path) -> None:
+    def strip_metadata(
+        self,
+        input_path: Path,
+        output_path: Path,
+        keep_fields: Optional[list] = None,
+        remove_fields: Optional[list] = None,
+    ) -> None:
         """Strip metadata from a DOCX file.
 
         Uses direct ZIP manipulation to avoid python-docx metadata issues.
@@ -71,6 +77,8 @@ class DOCXHandler(BaseHandler):
         Args:
             input_path: Path to input DOCX
             output_path: Path for output DOCX
+            keep_fields: Optional list of fields to preserve (not yet implemented)
+            remove_fields: Optional list of fields to explicitly remove (not yet implemented)
         """
         try:
             with ZipFile(input_path, "r") as zip_read, ZipFile(

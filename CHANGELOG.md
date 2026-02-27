@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-02-26
+
+### Added
+- **Recursive Processing**: Support for directory discovery via `-r` or `--recursive` flag.
+- **In-place Editing**: Option to overwrite original files directly via `-i` or `--in-place`.
+- **Backup Support**: Automatic creation of `.bak` files when using in-place editing with `--backup`.
+- **Dry-run Mode**: Preview which files would be processed without making modifications using `--dry-run`.
+- **Selective Metadata Control**:
+  - `--keep FIELD [FIELD ...]`: Preserve only specific metadata fields (e.g., Author, Title).
+  - `--remove FIELD [FIELD ...]`: Remove only specific metadata fields (e.g., GPS, Dates).
+  - Full support across PDF, JPEG, PNG, and WebP formats.
+- Comprehensive CLI testing suite in `tests/test_cli.py`.
+- Targeted selective metadata tests in `tests/test_selective.py`.
+
+### Changed
+- Refactored `BaseHandler` and `strip_metadata` core logic to support selective field filtering.
+- Updated CLI epilog with a full list of supported file formats.
+- Improved error handling for batch processing operations.
+
 ## [0.3.0] - 2026-02-26
 
 ### Added
@@ -85,6 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Test suite with pytest
 - Comprehensive documentation
 
+[0.4.0]: https://github.com/KnowOneActual/meta-stripper/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/KnowOneActual/meta-stripper/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/KnowOneActual/meta-stripper/releases/tag/v0.2.2
 [0.2.0]: https://github.com/KnowOneActual/meta-stripper/releases/tag/v0.2.0

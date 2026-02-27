@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "meta-stripper"
-version = "0.3.0"
+version = "0.4.0"
 description = "Privacy-focused metadata removal tool for documents and images"
 readme = "README.md"
 requires-python = ">=3.8"
